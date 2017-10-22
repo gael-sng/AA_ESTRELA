@@ -1,52 +1,83 @@
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string>
-#include "encodeDecode.hpp"
 
-int main (int argc, char *argv[]) {
+#define SIZE 4
+typedef struct TABLE{
+	int tile[SIZE][SIZE];
+}Table;
 
-	bool encode = true, bwt = false, runl = false, huffman = false;
-	string inputFile, outputFile;
-	int blockSize = 0;
+enum DIRECTION{
+	NONE = 0,
+	UP = 1,
+	RIGHT = 2,
+	DOWN = 3,
+	LEFT = 4
+}Direction;
+/*
+	 0  1  2  3
 
-	for (int i = 1; i < argc; ++i) {
-		string arg(argv[i]);
-		if (arg.compare("decode") == 0) {
-			encode = false;
-		} else if (arg.compare("-i") == 0) {
-			++i;
-			string file(argv[i]);
-			inputFile = file;
-		} else if (arg.compare("-o") == 0) {
-			++i;
-			string file(argv[i]);
-			outputFile = file;
-		} else if (arg.find("bwt") != string::npos) {
-			if ((arg.find("true") != string::npos) || (arg.find("TRUE") != string::npos))
-				bwt = true;
-		} else if (arg.find("txtblck") != string::npos) {
-			int k = 0;
-			while ((arg[k] < '0') || (arg[k] > '9')) ++k;
-			blockSize = atoi(arg.substr(k, arg.length()).c_str());
-		} else if (arg.find("huffman") != string::npos) {
-			if ((arg.find("true") != string::npos) || (arg.find("TRUE") != string::npos))
-				huffman = true;
-		} else if (arg.find("runl") != string::npos) {
-			if ((arg.find("true") != string::npos) || (arg.find("TRUE") != string::npos))
-				runl = true;
+0	01 02 03 04
+1	05 06 07 08
+2	09 10 11 12
+3	13 14 15 16
+*/
+int TableDist(Table* tab){
+	int dist = 0;
+	for (int i = 0; i < SIZE; ++i){
+		for (int j = 0; j < SIZE; ++j){
+			if(tab->tile[i][j] != ((i*SIZE) + (j+1))%16){
+				dist++;
+			}
 		}
 	}
+	return dist;
+}
 
-	if ((bwt == false) && (runl == false) && (huffman == false)) {
-		bwt = true;
-		runl = true;
-		huffman = true;
+bool TileSwap(Table* tab, int i, int j, int y, int x){
+	if(0 > i && i >= SIZE &&
+	   0 > j && j >= SIZE &&
+	   0 > y && y >= SIZE &&
+	   0 > x && x >= SIZE && ){return false;}
+
+	int aux = tab->tile[i][j];
+	tab->tile[i][j] = tab->tile[y][x];
+	tab->tile[y][x] = aux;
+	return true;
+}
+
+char* A_Estrela(Table* tab, int origin, int step){
+
+	return 0;
+}
+
+int main (int argc, char *argv[]) {
+	int N_tables = 0;
+	scanf("%d", &N_tables);
+
+	Table* table_vector = (Table*)calloc(N_tables, sizeof(Table));
+
+	for (int n = 0; n < N_tables; n++){
+		for (int i = 0; i < SIZE; i++){	
+			for (int j = 0; j < SIZE; j++){
+				scanf("%d", &table_vector[n].tile[i][j]);
+			}
+		}	
 	}
+	
 
-	if (encode)
-		encodeFile(inputFile, outputFile, bwt, runl, huffman, blockSize);
-	else
-		decodeFile(inputFile, outputFile);
 
+
+	printf("\n\nImprimindo as tables\n");
+	for (int n = 0; n < N_tables; n++){
+		printf("\nTable[%d] dsitancia :%d\n\t", n, TableDist(&table_vector[n]));
+		for (int i = 0; i < SIZE; i++){	
+			for (int j = 0; j < SIZE; j++){
+				printf("%d ", table_vector[n].tile[i][j]);
+			}
+			printf("\n\t");
+		}	
+	}
 	return 0;
 }
