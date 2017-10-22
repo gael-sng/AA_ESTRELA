@@ -1,5 +1,5 @@
 # Project name
-NAME=Compressor
+NAME=puzzle15
 
 
 # Directories
