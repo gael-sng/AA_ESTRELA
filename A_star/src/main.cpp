@@ -21,9 +21,9 @@ enum DIRECTION{
 0	01 02 03 04
 1	05 06 07 08
 2	09 10 11 12
-3	13 14 15 16
+3	13 14 15 00
 */
-int TableDist(Table* tab){
+int HammingDist(Table* tab){
 	int dist = 0;
 	for (int i = 0; i < SIZE; ++i){
 		for (int j = 0; j < SIZE; ++j){
@@ -35,11 +35,28 @@ int TableDist(Table* tab){
 	return dist;
 }
 
+
+int ManhattanDist(Table* tab){
+	int dist = 0;
+	int aux;
+	for (int i = 0; i < SIZE; ++i){
+		for (int j = 0; j < SIZE; ++j){
+			aux = tab->tile[i][j] - 1;
+			if(aux>=0){
+				dist += abs(i - (aux / SIZE)) + abs(j - (aux % SIZE)); 
+			}else{
+				dist += abs(i - 3) + abs(j - 3); 
+			}
+		}
+	}
+	return dist;
+}
+
 bool TileSwap(Table* tab, int i, int j, int y, int x){
-	if(0 > i && i >= SIZE &&
-	   0 > j && j >= SIZE &&
-	   0 > y && y >= SIZE &&
-	   0 > x && x >= SIZE && ){return false;}
+	if(0 > i && i >= SIZE
+	&& 0 > j && j >= SIZE
+	&& 0 > y && y >= SIZE
+	&& 0 > x && x >= SIZE ){return false;}
 
 	int aux = tab->tile[i][j];
 	tab->tile[i][j] = tab->tile[y][x];
@@ -48,9 +65,10 @@ bool TileSwap(Table* tab, int i, int j, int y, int x){
 }
 
 char* A_Estrela(Table* tab, int origin, int step){
-
-	return 0;
+	
+	return NULL;
 }
+
 
 int main (int argc, char *argv[]) {
 	int N_tables = 0;
@@ -71,7 +89,7 @@ int main (int argc, char *argv[]) {
 
 	printf("\n\nImprimindo as tables\n");
 	for (int n = 0; n < N_tables; n++){
-		printf("\nTable[%d] dsitancia :%d\n\t", n, TableDist(&table_vector[n]));
+		printf("\nTable[%d] dsitancia :%d\n\t", n, ManhattanDist(&table_vector[n]));
 		for (int i = 0; i < SIZE; i++){	
 			for (int j = 0; j < SIZE; j++){
 				printf("%d ", table_vector[n].tile[i][j]);
