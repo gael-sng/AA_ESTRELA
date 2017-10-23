@@ -8,8 +8,8 @@
 #define SIZE 4
 
 struct Table{
-	char tile[SIZE][SIZE];
-	short empty_x, empty_y;
+	int tile[SIZE][SIZE];
+	int empty_x, empty_y;
 };
 
 enum Direction{
@@ -169,7 +169,7 @@ void printTable(Table t){
 	//testing
 	for (int i = 0; i < SIZE; i++){	
 		for (int j = 0; j < SIZE; j++){
-			printf("%d ", t.tile[i][j]);
+			printf("%-2d ", t.tile[i][j]);
 		}
 		printf("\n");
 	} 	
@@ -195,66 +195,59 @@ Table readTable(){
 	return t;
 }
 
-//No longer a recursive function, bois
-string solves(Table t, int steps){
+int cost(Node n, Direction d/*, int limit*/){
+	return ManhattanDist(slide(n.t,d)) + n.steps+1;
+}
+
+string astar(Table t, int steps){
 
 	//creates a priority queue for storing the possibilities
 	priority_queue<Node, vector<Node>> q;
 
 	//pushing the first Node
-	Node n(t,ManhattanDist(t),0,NONE);
-	q.push(n);
+	q.push( Node(t,ManhattanDist(t),0,NONE) );
 	
+	//limit for our heuristic
+	// limit = ManhattanDist(t);
+
 	while(!q.empty()){
 
 		//removing lowest cost path
-		n = q.top();
+		Node n = q.top();
 		q.pop();
-
-		if(n.cost >= steps) continue;
 
 		//checking if we found the solution
 		if(ManhattanDist(n.t) == 0){
+			//printing here means we found the solution
 			printTable(n.t);
 			break;
 		};
 
+		/*I should stop searching when my cost possibilites are higher than
+		the allowed number of steps */
+		if(n.cost > steps) break;
+
 		//didnt found, lets keep searching
 		//for each direction
-		if(valid(n.t,UP) && n.last != DOWN){
-			Node new_node(slide(n.t, UP), 
-				ManhattanDist(new_node.t) + n.steps+1,
-				 n.steps+1,
-				  UP);
-			q.push(new_node);
-		}
-		if(valid(n.t,DOWN) && n.last != UP){
-			Node new_node(slide(n.t, DOWN),
-			 ManhattanDist(new_node.t) + n.steps+1,
-			  n.steps+1,
-			   DOWN);
-			q.push(new_node);
-		}
-		if(valid(n.t,LEFT) && n.last != RIGHT){
-			Node new_node(slide(n.t, LEFT),
-			 ManhattanDist(new_node.t) + n.steps+1,
-			  n.steps+1,
-			   LEFT);
-			q.push(new_node);
-		}
-		if(valid(n.t,RIGHT) && n.last != LEFT){
-			Node new_node(slide(n.t, RIGHT),
-			 ManhattanDist(new_node.t) + n.steps+1,
-			  n.steps+1,
-			   RIGHT);
-			q.push(new_node);
-		}
+		if(valid(n.t,UP) && n.last != DOWN && cost < 0)
+			q.push( Node(slide(n.t, UP), cost(n, UP), n.steps+1, UP) );
+		
+		if(valid(n.t,DOWN) && n.last != UP && cost < 0)
+			q.push( Node(slide(n.t, DOWN), cost(n, DOWN), n.steps+1, DOWN) );
+		
+		if(valid(n.t,LEFT) && n.last != RIGHT && cost < 0)
+			q.push( Node(slide(n.t, LEFT), cost(n, LEFT), n.steps+1, LEFT) );
+		
+		if(valid(n.t,RIGHT) && n.last != LEFT && cost < 0)
+			q.push( Node(slide(n.t, RIGHT), cost(n, RIGHT), n.steps+1, RIGHT) );
+		
 
 
 		/*	The cost f(x) of a state is given by f(x) = g(x) + h(x)
 			g(x) = Manhattan distance from the correct game table for that state
 			h(x) = Number of steps to reach this state from the initial state*/
 	}
+
 
 }
 
@@ -283,7 +276,7 @@ int main (int argc, char *argv[]) {
 		//problem solution is in this string
 		string sol = "";
 
-		sol = solves(t,max_steps);
+		sol = astar(t,max_steps);
 	}
 
 	return 0;
