@@ -229,16 +229,16 @@ string astar(Table t, int steps){
 
 		//didnt found, lets keep searching
 		//for each direction
-		if(valid(n.t,UP) && n.last != DOWN && cost < 0)
+		if(valid(n.t,UP) && n.last != DOWN)
 			q.push( Node(slide(n.t, UP), cost(n, UP), n.steps+1, UP) );
 		
-		if(valid(n.t,DOWN) && n.last != UP && cost < 0)
+		if(valid(n.t,DOWN) && n.last != UP)
 			q.push( Node(slide(n.t, DOWN), cost(n, DOWN), n.steps+1, DOWN) );
 		
-		if(valid(n.t,LEFT) && n.last != RIGHT && cost < 0)
+		if(valid(n.t,LEFT) && n.last != RIGHT)
 			q.push( Node(slide(n.t, LEFT), cost(n, LEFT), n.steps+1, LEFT) );
 		
-		if(valid(n.t,RIGHT) && n.last != LEFT && cost < 0)
+		if(valid(n.t,RIGHT) && n.last != LEFT)
 			q.push( Node(slide(n.t, RIGHT), cost(n, RIGHT), n.steps+1, RIGHT) );
 		
 
