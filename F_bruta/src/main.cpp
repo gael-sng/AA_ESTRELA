@@ -6,18 +6,21 @@
 
 #define SIZE 4
 
-typedef struct TABLE{
+struct Table{
 	int tile[SIZE][SIZE];
 	int empty_x, empty_y;
-}Table;
+};
 
-typedef enum DIRECTION{
+enum Direction{
 	NONE = 0,
 	UP = 1,
 	RIGHT = 2,
 	DOWN = 3,
 	LEFT = 4
-}Direction;
+};
+
+//picks return values of scanf. This variable only exists to supress compiler warnings.
+int garbage;
 
 using namespace std;
 
@@ -138,12 +141,11 @@ void printTable(Table t){
 /* Reads a table from STDIN and return it*/
 Table readTable(){
 	Table t;
-
 	for (int i = 0; i < SIZE; i++){	
 		for (int j = 0; j < SIZE; j++){
 
 			//reads Table tiles 
-			scanf("%d", &t.tile[i][j]);
+			garbage = scanf("%d", &t.tile[i][j]);
 
 			//marks position of empty tile
 			if(t.tile[i][j] == 0){
@@ -208,7 +210,7 @@ int main (int argc, char *argv[]) {
 	Table t;
 
 	//Reads the number of games available
-	scanf("%d", &n_games);
+	garbage = scanf("%d", &n_games);
 	for (int n = 0; n < n_games; n++){
 		/*For each game, reads the game table,
 			tries to solve it and prints the result*/

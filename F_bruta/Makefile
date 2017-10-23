@@ -1,5 +1,5 @@
 # Project name
-NAME=puzzle15
+NAME=puzzle15_brute
 
 
 # Directories
@@ -64,6 +64,7 @@ go: main run
 # Utility directives
 clean:
 	-rm -f $(OBJDIR)/*.o
+	rm -f $(BLDDIR)/*
 	clear
 	clear
 

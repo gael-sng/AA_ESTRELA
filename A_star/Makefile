@@ -1,5 +1,5 @@
 # Project name
-NAME=Compressor
+NAME=puzzle15_astar
 
 
 # Directories
@@ -63,7 +63,8 @@ go: main run
 
 # Utility directives
 clean:
-	-rm -f $(OBJDIR)/*.o
+	rm -f $(OBJDIR)/*.o
+	rm -f $(BLDDIR)/*
 	clear
 	clear
 
