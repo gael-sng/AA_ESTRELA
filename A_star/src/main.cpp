@@ -56,6 +56,8 @@ int garbage;
 3	13 14 15 16 
 */
 
+
+
 int HammingDist(Table tab){
 	int dist = 0;
 	for (int i = 0; i < SIZE; ++i){
@@ -267,6 +269,24 @@ string astar(Table t, unsigned  int Max_steps){
 	return "";
 }
 
+// This function returns true if given
+// instance of N*N - 1 puzzle is solvable
+bool isSolvable(Table t){
+	int count = 0;
+	for (int i = 0; i < (SIZE*SIZE); i++){
+		for (int x = i +1; x < (SIZE*SIZE); x++){
+			if(t.tile[x/SIZE][x%SIZE] && t.tile[i/SIZE][i%SIZE] && t.tile[i/SIZE][i%SIZE] > t.tile[x/SIZE][x%SIZE]){
+				count++;
+			}
+		}
+	}
+	int line = 0;
+	FindZero(t, &line, &garbage);
+    if (line & 1)
+        return !(count & 1);
+    return count & 1;
+}
+
 int main (int argc, char *argv[]) {
 	int n_games = 0;
 	int max_steps;
@@ -293,7 +313,7 @@ int main (int argc, char *argv[]) {
 		string sol = "";
 		
 		clock_t c_inicial = clock();
-		sol = astar(t,max_steps);
+		if(isSolvable(t))sol = astar(t,max_steps);
 		clock_t c_final = clock();
 
 		if(sol.size() > 0){
