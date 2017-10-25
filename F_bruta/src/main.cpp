@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <string>
 #include <algorithm>
+#include <time.h>
 
 #define SIZE 4
 
@@ -198,6 +199,7 @@ bool solves(Table t, string& sol, int steps, char last){
 }
 
 int main (int argc, char *argv[]) {
+
 	int n_games = 0;
 	int max_steps;
 
@@ -222,11 +224,21 @@ int main (int argc, char *argv[]) {
 		//problem solution is in this string
 		string sol = "";
 
+		// pegando o clock para o calculo do tmepo de execução
+		clock_t c_inicial = clock();	
 		solves(t,sol, max_steps, ' ');
+		clock_t c_final = clock();
 
 		//prints result
 		reverse(sol.begin(),sol.end());
-		cout << (sol.size() > 0 ? sol: "This puzzle is not solvable.") << endl;
+		if(sol.size() > 0){
+			cout << " \nTempo de execução: ";
+			cout << ((c_final - c_inicial)/CLOCKS_PER_SEC) << endl;
+
+		}else{
+			cout << "This puzzle is not solvable." << endl;
+			
+		}
 	}
 
 	return 0;
