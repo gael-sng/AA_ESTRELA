@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <string>
 #include <algorithm>
+#include <time.h>
 
 #define SIZE 4
 
@@ -162,7 +163,6 @@ bool solves(Table t, string& sol, int steps, char last){
 	// printf("Currently on step %d\n",steps);
 	//checks if we found the solution
 	if(HammingDist(t) == 0){
-		printTable(t);
 		return true;
 	}
 
@@ -197,7 +197,26 @@ bool solves(Table t, string& sol, int steps, char last){
 	return false;
 }
 
+// This function returns true if given
+// instance of N*N - 1 puzzle is solvable
+bool isSolvable(Table t){
+	int count = 0;
+	for (int i = 0; i < (SIZE*SIZE); i++){
+		for (int x = i +1; x < (SIZE*SIZE); x++){
+			if(t.tile[x/SIZE][x%SIZE] && t.tile[i/SIZE][i%SIZE] && t.tile[i/SIZE][i%SIZE] > t.tile[x/SIZE][x%SIZE]){
+				count++;
+			}
+		}
+	}
+	int line = t.empty_y;
+    if (line & 1)
+        return !(count & 1);
+    return count & 1;
+}
+
+
 int main (int argc, char *argv[]) {
+
 	int n_games = 0;
 	int max_steps;
 
@@ -222,11 +241,20 @@ int main (int argc, char *argv[]) {
 		//problem solution is in this string
 		string sol = "";
 
-		solves(t,sol, max_steps, ' ');
+		// pegando o clock para o calculo do tmepo de execução
+		clock_t c_inicial = clock();	
+		if(isSolvable(t))solves(t,sol, max_steps, ' ');
+		clock_t c_final = clock();
 
 		//prints result
 		reverse(sol.begin(),sol.end());
-		cout << (sol.size() > 0 ? sol: "This puzzle is not solvable.") << endl;
+		if(sol.size() > 0){
+			cout << "Tempo de execução: ";
+			cout << ((c_final - c_inicial)/(double)CLOCKS_PER_SEC) << endl;
+			cout << sol << endl << endl;
+		}else{
+			cout << "This puzzle is not solvable." << endl << endl;
+		}
 	}
 
 	return 0;
