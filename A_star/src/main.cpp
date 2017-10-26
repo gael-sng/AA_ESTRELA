@@ -216,7 +216,7 @@ Table readTable(){
 }
 
 int cost(Node n, char d/*, int limit*/){
-	return (ManhattanDist(slide(n.t,d))/2) * (n.steps.size()+1);
+	return (ManhattanDist(slide(n.t,d))) + (n.steps.size()+1);
 }
 
 string astar(Table t, unsigned  int Max_steps){
@@ -244,7 +244,7 @@ string astar(Table t, unsigned  int Max_steps){
 
 		/*I should stop searching when my cost possibilites are higher than
 		the allowed number of steps */
-		if(n.steps.size() > Max_steps) continue;
+		if(n.steps.size() > Max_steps) return "Numero de passos maior que " + to_string(Max_steps);
 
         //didnt found, lets keep searching         //for each direction
 		if(valid(n.t,UP) && n.steps.back() != DOWN )             
@@ -307,7 +307,7 @@ int main (int argc, char *argv[]) {
 
 		//reading game table
 		t = readTable();
-		// printTable(t);
+		printTable(t);
 
 		//problem solution is in this string
 		string sol = "";
@@ -317,12 +317,12 @@ int main (int argc, char *argv[]) {
 		clock_t c_final = clock();
 
 		if(sol.size() > 0){
-			cout << " \nTempo de execução: ";
+			cout << "Tempo de execução: ";
 			cout << ((c_final - c_inicial)/(double)CLOCKS_PER_SEC) << endl;
-			cout << sol << endl;
+			cout << sol << endl << endl;
 
 		}else{
-			cout << "This puzzle is not solvable." << endl;
+			cout << "This puzzle is not solvable." << endl << endl;
 			
 		}
 	}
